@@ -18,11 +18,10 @@ def fuel_requirement_recursive(module):
     if fuel <= 0:
         return 0
     else:
-
         return fuel + fuel_requirement_recursive(fuel)
 
 
-print(f"unit tests pass: {unit_tests()}")
+print(f"unit tests passed: {unit_tests()}")
 
 modules = [int(line) for line in open('data/input01').readlines()]
 print(f"solution for part1: {sum(fuel_requirement(module) for module in modules)}")
