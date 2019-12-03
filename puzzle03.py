@@ -9,7 +9,7 @@ def decode(wire):
     for segment in wire.split(','):
         direction, length = segment[0], int(segment[1:])
         start = points[-1]
-        new_points = [start + l * base_vectors[direction] for l in range(1, length + 1)]
+        new_points = [start + i * base_vectors[direction] for i in range(1, length + 1)]
         points.extend(new_points)
     return points
 
