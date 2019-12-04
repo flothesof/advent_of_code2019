@@ -49,6 +49,7 @@ assert rules_apply_part2(112233)
 assert not rules_apply_part2(123444)
 assert rules_apply_part2(111122)
 
+# solving parts 1 and 2
 password_range = (272091, 815432)
 valid = []
 valid_part2 = []
