@@ -59,6 +59,7 @@ nodes = build_solar_system(inp)
 print(f"solution for part1: {sum(map(lambda node_name: count_orbits(nodes, node_name), nodes.keys()))}")
 
 
+# part2
 def get_parents(nodes, start_name):
     node = nodes[start_name]
     parents = []
