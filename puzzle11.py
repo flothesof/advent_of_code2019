@@ -172,4 +172,5 @@ for x, y, val in zip(xx, yy, vals):
     x = x - xmin
     y = y - ymin
     hull_drawing[int(y), int(x)] = val
-plt.imshow(hull_drawing[::-1, :])
+plt.imshow(hull_drawing, origin='lower')
+plt.show()
