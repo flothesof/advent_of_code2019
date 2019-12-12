@@ -19,10 +19,6 @@ def parse_input(inp1):
     return dict(zip(['Io', 'Europa', 'Ganymede', 'Callisto'], moons))
 
 
-moons = parse_input(inp1)
-assert np.allclose(moons['Io'], np.array([-1, 0, 2]))
-velocities = {key: np.array([0, 0, 0]) for key in moons}
-
 # moons 'Io', 'Europa', 'Ganymede', 'Callisto'
 def step(moons, velocities):
     # update velocities
@@ -50,6 +46,7 @@ def printout(step, moons, velocities):
         print(f'pos=<x={pos[0]}, y={pos[1]}, z={pos[2]}>, vel=<x={vel[0]}, y={vel[1]}, z={vel[2]}>')
     print(f'total energy: {total_energy(moons, velocities)}')
 
+
 def total_energy(moons, velocities):
     total = []
     for moon in moons:
@@ -58,6 +55,11 @@ def total_energy(moons, velocities):
         total.append(pot * kin)
     return sum(total)
 
+
+# unit test part1
+moons = parse_input(inp1)
+assert np.allclose(moons['Io'], np.array([-1, 0, 2]))
+velocities = {key: np.array([0, 0, 0]) for key in moons}
 printout(0, moons, velocities)
 moons, velocities = step(moons, velocities)
 printout(1, moons, velocities)
@@ -73,8 +75,6 @@ for _ in range(1000):
     moons, velocities = step(moons, velocities)
 print(f'solution for part1: {total_energy(moons, velocities)}')
 
-
-
 moons = parse_input(open('data/input12').read().strip())
 velocities = {key: np.array([0, 0, 0]) for key in moons}
 energies = [total_energy(moons, velocities)]
@@ -82,3 +82,46 @@ for _ in range(1000):
     moons, velocities = step(moons, velocities)
     energies.append(total_energy(moons, velocities))
 
+
+def total_energy2(moons, velocities):
+    total = []
+    for moon in moons:
+        pot = np.sqrt(np.sum(np.abs(moons[moon] ** 2)))
+        kin = np.sum(np.abs(velocities[moon] ** 2))
+        total.append(pot + kin)
+    return sum(total)
+
+
+def hash(moons, velocities):
+    return "".join(map(str, np.array(list(moons.values()) + list(velocities.values())).ravel().tolist()))
+
+
+# part2 unit test
+moons = parse_input(inp1)
+velocities = {key: np.array([0, 0, 0]) for key in moons}
+states = set([hash(moons, velocities)])
+while True:
+    moons, velocities = step(moons, velocities)
+    curr_hash = hash(moons, velocities)
+    if curr_hash in states:
+        break
+    else:
+        states.add(curr_hash)
+assert len(states) == 2772
+print('part2 unit test passes')
+
+# part2 program
+moons = parse_input(open('data/input12').read().strip())
+velocities = {key: np.array([0, 0, 0]) for key in moons}
+states = set([hash(moons, velocities)])
+nstep = 0
+while True:
+    moons, velocities = step(moons, velocities)
+    curr_hash = hash(moons, velocities)
+    if curr_hash in states:
+        break
+    else:
+        states.add(curr_hash)
+    nstep += 1
+    if nstep % 10000 == 0: print(f"nstep: {nstep}")
+print(f"solution for part2: {len(states)}")
