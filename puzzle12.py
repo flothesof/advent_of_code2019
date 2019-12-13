@@ -60,13 +60,14 @@ def total_energy(moons, velocities):
 moons = parse_input(inp1)
 assert np.allclose(moons['Io'], np.array([-1, 0, 2]))
 velocities = {key: np.array([0, 0, 0]) for key in moons}
-printout(0, moons, velocities)
-moons, velocities = step(moons, velocities)
-printout(1, moons, velocities)
-for _ in range(9):
+if False:
+    printout(0, moons, velocities)
     moons, velocities = step(moons, velocities)
-printout(10, moons, velocities)
-assert total_energy(moons, velocities) == 179
+    printout(1, moons, velocities)
+    for _ in range(9):
+        moons, velocities = step(moons, velocities)
+    printout(10, moons, velocities)
+    assert total_energy(moons, velocities) == 179
 
 # part1
 moons = parse_input(open('data/input12').read().strip())
@@ -75,53 +76,40 @@ for _ in range(1000):
     moons, velocities = step(moons, velocities)
 print(f'solution for part1: {total_energy(moons, velocities)}')
 
-moons = parse_input(open('data/input12').read().strip())
-velocities = {key: np.array([0, 0, 0]) for key in moons}
-energies = [total_energy(moons, velocities)]
-for _ in range(1000):
-    moons, velocities = step(moons, velocities)
-    energies.append(total_energy(moons, velocities))
-
-
-def total_energy2(moons, velocities):
-    total = []
-    for moon in moons:
-        pot = np.sqrt(np.sum(np.abs(moons[moon] ** 2)))
-        kin = np.sum(np.abs(velocities[moon] ** 2))
-        total.append(pot + kin)
-    return sum(total)
-
 
 def hash(moons, velocities):
     return "".join(map(str, np.array(list(moons.values()) + list(velocities.values())).ravel().tolist()))
 
 
+def get_cycle(moons, coordinate_index):
+    """Finds a cycle in coordinate x1 only by simulating x1 = f(x1, vx1)."""
+    moons = {key: moons[key][coordinate_index + 0:coordinate_index + 1] for key in moons}
+    velocities = {key: np.array([0]) for key in moons}
+    initial_hash = hash(moons, velocities)
+    nsteps = 0
+    while True:
+        moons, velocities = step(moons, velocities)
+        nsteps += 1
+        curr_hash = hash(moons, velocities)
+        if curr_hash == initial_hash:
+            break
+    return nsteps
+
+
 # part2 unit test
 moons = parse_input(inp1)
-velocities = {key: np.array([0, 0, 0]) for key in moons}
-states = set([hash(moons, velocities)])
-while True:
-    moons, velocities = step(moons, velocities)
-    curr_hash = hash(moons, velocities)
-    if curr_hash in states:
-        break
-    else:
-        states.add(curr_hash)
-assert len(states) == 2772
-print('part2 unit test passes')
+period0 = get_cycle(moons, coordinate_index=0)
+period1 = get_cycle(moons, coordinate_index=1)
+period2 = get_cycle(moons, coordinate_index=2)
+min_cycle = min(np.lcm(np.lcm(period0, period1), period2), np.lcm(np.lcm(period0, period2), period1),
+                np.lcm(np.lcm(period1, period2), period0))
+assert min_cycle == 2772
 
-# part2 program
+# part2
 moons = parse_input(open('data/input12').read().strip())
-velocities = {key: np.array([0, 0, 0]) for key in moons}
-states = set([hash(moons, velocities)])
-nstep = 0
-while True:
-    moons, velocities = step(moons, velocities)
-    curr_hash = hash(moons, velocities)
-    if curr_hash in states:
-        break
-    else:
-        states.add(curr_hash)
-    nstep += 1
-    if nstep % 10000 == 0: print(f"nstep: {nstep}")
-print(f"solution for part2: {len(states)}")
+period0 = get_cycle(moons, coordinate_index=0)
+period1 = get_cycle(moons, coordinate_index=1)
+period2 = get_cycle(moons, coordinate_index=2)
+min_cycle = min(np.lcm(np.lcm(period0, period1), period2), np.lcm(np.lcm(period0, period2), period1),
+                np.lcm(np.lcm(period1, period2), period0))
+print(f"solution for part2: {min_cycle}")
