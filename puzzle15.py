@@ -125,12 +125,14 @@ for nstep in range(10000):
             assert retval != 0
             robot_pos = robot_pos + vectors[step_forward]
             environment[robot_pos] = retval
-environment[0 + 0j] = 3
-plt.close()
-fig = plt.figure()
-plt.imshow(render(environment), origin='lower')
-plt.colorbar()
-plt.show()
+
+if DEBUG:
+    environment[0 + 0j] = 3
+    plt.close()
+    fig = plt.figure()
+    plt.imshow(render(environment), origin='lower')
+    plt.colorbar()
+    plt.show()
 
 
 def build_graph(environment):
