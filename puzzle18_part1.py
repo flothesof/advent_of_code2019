@@ -139,10 +139,11 @@ for test_inp, expected in zip([test_inp1, test_inp2, test_inp3, test_inp4],
     mini = minsteps('@', len(keys), current_keys=frozenset())
     assert mini == expected
 
-# part1
-vault = make_coord2val(inp)
-shortest_paths = static_shortest_paths(vault)
-items_on_way = static_items_on_way(vault)
-keys = set([val for val in set(vault.values()) if val in alphabet])
-mini = minsteps('@', len(keys), current_keys=frozenset())
-print(f"solution for part1: {mini}")
+if __name__ == '__main__':
+    # part1
+    vault = make_coord2val(inp)
+    shortest_paths = static_shortest_paths(vault)
+    items_on_way = static_items_on_way(vault)
+    keys = set([val for val in set(vault.values()) if val in alphabet])
+    mini = minsteps('@', len(keys), current_keys=frozenset())
+    print(f"solution for part1: {mini}")
