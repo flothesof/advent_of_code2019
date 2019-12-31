@@ -75,6 +75,12 @@ class IntCodeComputer:
         self.state = program[:], index, relative_base, extra_mem.copy(), prints[:]
 
     def run(self, input_values):
+        """Runs the intcode program using `input_values` when needed.
+
+        .. Example::
+
+            >>> program, prints, status = computer.run(input_values=[0])
+        """
         if not self.resume:
             program = self.input_program[:]
             index = 0
