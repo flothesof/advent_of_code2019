@@ -175,3 +175,4 @@ ax = plot_asts(ast, seen_asts, coloring=angles)
 x = [ast.real for ast in vaporized]
 y = [ast.imag for ast in vaporized]
 ax.plot(x, y, '-o', lw=2)
+plt.show()
